@@ -1,28 +1,47 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import { InputForm, Organization } from './components';
+import { getIssuesOfRepository, resolveIssuesQuery } from './helpers';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+const App = () => {
+    const [path, setPath] = useState(
+        'the-road-to-learn-react/the-road-to-learn-react'
     );
-  }
-}
+
+    const [state, setState] = useState({
+        organization: null,
+        errors: null
+    });
+
+    useEffect(() => {
+        onFetchFromGitHub(path);
+    }, []);
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+        onFetchFromGitHub(path);
+    };
+
+    const onFetchFromGitHub = () => {
+        getIssuesOfRepository(path).then((queryResult) =>
+            setState(resolveIssuesQuery(queryResult))
+        );
+    };
+
+    return (
+        <div>
+            <h1>React GraphQL GitHub Client</h1>
+            <InputForm path={path} setPath={setPath} onSubmit={onSubmit} />
+            {state.organization ? (
+                <Organization
+                    organization={state.organization}
+                    errors={state.organization}
+                />
+            ) : (
+                <p>Loading</p>
+            )}
+        </div>
+    );
+};
 
 export default App;
