@@ -1,25 +1,28 @@
-import React from 'react';
-import { Repository } from '../components';
+import React from "react";
+import { Repository } from "../components";
 
-const Organization = ({ organization, errors }) => {
-    if (!errors) {
-        return (
-            <p>
-                <strong>Something went wrong:</strong>
-                {errors.map((error) => error.message).join(' ')}
-            </p>
-        );
-    }
-
+const Organization = ({ organization, errors, onFetchMoreIssues }) => {
+  if (!errors) {
     return (
-        <div>
-            <p>
-                <strong>Issues from Organization</strong>
-                <a href={organization.url}>{organization.name}</a>
-            </p>
-            <Repository repository={organization.repository} />
-        </div>
+      <p>
+        <strong>Something went wrong:</strong>
+        {errors.map(error => error.message).join(" ")}
+      </p>
     );
+  }
+
+  return (
+    <div>
+      <p>
+        <strong>Issues from Organization</strong>
+        <a href={organization.url}>{organization.name}</a>
+      </p>
+      <Repository
+        repository={organization.repository}
+        onFetchMoreIssues={onFetchMoreIssues}
+      />
+    </div>
+  );
 };
 
 export default Organization;
